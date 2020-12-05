@@ -1,5 +1,6 @@
 
 setwd("D:/NHD+Data/R_CODES/USGSCodes")
+
 # rm(list=setdiff(ls(), "nc"))
 
 # Importing Gaging Stations -----------------------------------------------
@@ -7,6 +8,8 @@ setwd("D:/NHD+Data/R_CODES/USGSCodes")
 library(tidyverse)
 library(readxl)
 GagesStations <- read_excel("GagesStations.xlsx")
+
+# View(GagesStations)
 
 stations <- GagesStations$STAID
 
@@ -38,27 +41,29 @@ str(nc_mean)
 nc_1 <- nc
 
 
-View(nc_mean)
+# View(nc_mean)
 
-write.csv(nc_mean, "nc_dv_mean1.csv")
+# write.csv(nc_mean, "nc_dv_mean1.csv")
 
 nc_mean <- read_csv("nc_dv_mean1.csv", 
                     col_types = cols(`03` = col_character())) # Mean daily Discharge data from 2000 to 2019.
 
 
-str(nc_mean)
+# str(nc_mean)
 
 # The previous code was run earlier to generate the daily mean discharge of 514 Gaging stations.
 # The file was large and it took more than 3 hours to run the code. 
 # Hence, the file was stored as .txt format in the computer.
 
 
-View(nc_mean)
+# View(nc_mean)
 
 
 # Baseflow Index ----------------------------------------------------------
 
-# install.packages("EflowStats", repos=c("https://owi.usgs.gov/R",getOption("repos")))
+install.packages("EflowStats", repos=c("https://owi.usgs.gov/R",getOption("repos")))
+ 
+remotes::install_github("USGS-R/EflowStats")
 
 library(EflowStats)
 
@@ -140,3 +145,22 @@ Three.hydrologic.signatures <-
 Three.hydrologic.signaturesCleaned <- 
   Three.hydrologic.signatures %>% 
   filter(bfi.index >= 0)
+
+str(Three.hydrologic.signaturesCleaned)
+
+
+
+# View(Three.hydrologic.signaturesCleaned)
+
+# write.csv(Three.hydrologic.signaturesCleaned, "Signatures123.csv")
+
+
+nc_mean %>% filter(site_no == "02174250") %>% ggplot(aes (x = Date, y = Flow))+
+  geom_line()+
+  scale_x_date(date_breaks = "1 year", date_labels =  "%b %Y") 
+
+
+
+
+  
+
